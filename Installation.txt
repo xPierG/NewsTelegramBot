@@ -1,0 +1,52 @@
+sudo npm install express
+sudo npm install node-telegram-bot-api
+sudo npm install mongojs
+sudo npm install -g mocha
+
+
+
+
+----
+logging_​ => ​*morgan*​ https://github.com/expressjs/morgan
+​_config_​ => ​*node-config*​  https://github.com/lorenwest/node-config e ​*simple-registry*​ https://github.com/michaelhodgins/simple-registry
+​_testing_​ => ​*mocha*​ https://github.com/mochajs/mocha
+
+---
+Note:
+Link
+https://code.visualstudio.com/docs/editor/codebasics
+http://nodeschool.io/index.html
+sudo npm...
+
+UNINSTALLING GIT
+============
+Run the uninstall script in /usr/local/git/uninstall.sh
+
+
+Cartelle
+/users/pgrossi/EserciziNode
+/users/pgrossi/EserciziNode/javascripting
+cd /users/pgrossi/myTelegramBot
+
+
+---
+Use this token to access the HTTP API:
+160112754:AAHSWJlxyTnCmtQXM3Fje5-0jlDyulK71F0
+
+PierGTest_bot
+DEBUG=node-telegram-bot-api node program.js;
+
+IP MAC: 192.168.1.111
+IP PUBBLICO: 151.55.192.253
+porta: 1234
+
+---
+/usr/local/lib/node_modules/learnyoumongo
+var shortUrl = 'user:cippalippa@ds045795.mongolab.com:45795/pierg_telegram_test';
+
+
+logging_​ => ​*morgan*​ https://github.com/expressjs/morgan
+​_config_​ => ​*node-config*​  https://github.com/lorenwest/node-config e ​*simple-registry*​ https://github.com/michaelhodgins/simple-registry
+​_testing_​ => ​*mocha*​ https://github.com/mochajs/mocha
+
+http://electron.atom.io/
