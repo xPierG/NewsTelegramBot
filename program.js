@@ -1,12 +1,53 @@
-var express = require('express');
+//var express = require('express');
 var TelegramBot = require('node-telegram-bot-api');
-var db = mongodb(shortUrl);
+//var db = mongodb(shortUrl);
+var logger = require('./libs/log.js');
+var config = require('config');
 
+var bot = "";
 
-var token = '165064699:AAEelA8u4MtQTvbkt0uy8uP9qFtiA20eJJA';
+logger.info('Application starts');
 
-// Setup polling way
-var bot = new TelegramBot(token, {polling: true});
+if (config.has('Telegram.TelegramToken')) {
+    var token = config.get('Telegram.TelegramToken');
+    logger.info('Connecting with telegram bot with TOKEN: ' + token);
+    // Setup polling way
+    bot = new TelegramBot(token, {polling: true});
+    logger.info('Connected');
+}
+else {
+    logger.error('Cannot read Telegram TOKEN from configuration file dafault.json');
+}
+
+// Matches /echo [whatever]
+bot.onText(/\/echo (.+)/, function (msg, match) {
+    var fromId = msg.from.id;
+    var resp = match[1];
+    logger.info('onText: echo '+ msg.text + ', from: ' + msg.from.username.toString());
+    bot.sendMessage(fromId, resp);
+});
+
+bot.onText(/\/chisono/, function (msg, match) {
+    var fromId = msg.from.id;
+    var fromUser = msg.from.username.toString();
+    logger.info('onText: WhoAmI - (' + fromId + ') ' + fromUser);
+    bot.sendMessage(fromId, 'Sei: ' + fromUser);
+});
+
+bot.onText(/\/suggerisco (.+)/, function (msg, match) {
+    var fromId = msg.from.id;
+    var resp = match[1];
+    logger.info('onText: suggest '+ msg.text + ', from: ' + msg.from.username.toString());
+    bot.sendMessage(fromId, 'Grazie per suggerire: "' + match[1] + '"');
+    
+});
+
+// Any kind of message
+bot.on('message', function (msg) {
+    var fromId = msg.from.id;
+    logger.info('onMsg: '+ msg.text + ', from: ' + msg.from.username.toString());
+});
+/*
 
 var idPierG = 33422195;
 var idDiego = 26248661;
@@ -29,11 +70,11 @@ bot.onText(/\/DO (.+)/, function (msg, match) {
     console.log('onText: DO '+ msg + ', from: ' + msg.from.username.toString());
     bot.sendMessage(fromId, resp);
 });
-/*
+
 // What's a contact?
-bot.on('contact', function (msg, match) {
-    console.log('onText: ' + resp + ', fromId:' + fromId);
-});*/
+//bot.on('contact', function (msg, match) {
+//    console.log('onText: ' + resp + ', fromId:' + fromId);
+//});
 
 // Any kind of message
 bot.on('message', function (msg) {
@@ -97,3 +138,4 @@ db.on('connect', function () {
 db.on('close', function () {
     console.log('database closed')
 })
+*/

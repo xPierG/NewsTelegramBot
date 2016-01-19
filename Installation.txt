@@ -2,7 +2,8 @@ sudo npm install express
 sudo npm install node-telegram-bot-api
 sudo npm install mongojs
 sudo npm install -g mocha
-
+sudo npm install config
+sudo npm install winston
 
 
 

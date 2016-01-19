@@ -1,0 +1,19 @@
+{
+    //Telgram configs
+    "Telegram": {
+        "TelegramToken": "165064699:AAEelA8u4MtQTvbkt0uy8uP9qFtiA20eJJA" 
+    }    
+    // Customer module configs 
+//    "Customer": {
+//        "dbConfig": {
+//            "host": "localhost",
+//            "port": 5984,
+//            "dbName": "customers"
+//        },
+//    "credit": {
+//            "initialLimit": 100,
+//            // Set low for development
+//            "initialDays": 1
+//        }
+//    };
+}
