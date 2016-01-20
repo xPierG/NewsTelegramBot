@@ -5,4 +5,4 @@ sudo npm install -g mocha
 sudo npm install config
 sudo npm install winston
 
-Create a default.json inside config dir with proper items
+Create a default.json inside /config dir with proper items

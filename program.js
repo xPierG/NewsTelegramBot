@@ -1,10 +1,11 @@
 var TelegramBot = require('node-telegram-bot-api');
 var logger = require('./libs/log.js');
 var config = require('config');
+var mongodb = require('mongojs');
 //var express = require('express');
-//var db = mongodb(shortUrl);
 
 var bot = "";
+var db = "";
 
 logger.info('Application starts');
 
@@ -17,6 +18,15 @@ if (config.has('Telegram.TelegramToken')) {
 }
 else {
     logger.error('Cannot read Telegram TOKEN from configuration file dafault.json');
+}
+
+if (config.has('DataBase.URL')) {
+    // Connection URL. This is where your mongodb server is running.
+    var shortUrl = config.get('DataBase.URL');
+    db = mongodb(shortUrl);
+}
+else {
+    logger.error('Cannot read DB address from configuration file dafault.json');    
 }
 
 // Matches /echo [whatever]
@@ -39,7 +49,49 @@ bot.onText(/\/suggerisco (.+)/, function (msg, match) {
     var resp = match[1];
     logger.info('Telegram-onText: suggerisco '+ msg.text + ', from: ' + msg.from.username.toString());
     bot.sendMessage(fromId, 'Grazie per suggerire: "' + match[1] + '"');
-    
+});
+
+bot.onText(/\/start/, function (msg, match) {
+    var fromId = msg.from.id;
+    var username = msg.from.username.toString();
+    bot.sendMessage(fromId, 'Benvenuto: ' + msg.from.username.toString());
+    logger.info('Telegram-onMsg start - from: ' + msg.from.username.toString());
+
+    //salvare in DB
+    var myCollection = db.collection('users');
+    myCollection.find({userName: username}, function (err, docs) {
+        if (err || !docs.length) {
+            logger.warn(username + ' not found');
+            myCollection.insert({userName: username, chatid: fromId}, function (err, res) {
+                if (err) {
+                    logger.error('Error in insert new user: ' + err);
+                }
+                else 
+                    logger.info('Update complete. Inserted ' + username + ' Id:' + fromId);
+            });
+        }
+        else {
+            var element = docs[0];
+            logger.info('found ' + username);
+            logger.info('Id: ' + element.chatId + ' Name:' + element.userName);        
+            myCollection.update({userName: element.userName}, {$set: {chatId: element.chatId}}, {}, function (err, updated) {
+                if (err) {
+                    logger.error('Error in update user: ' + err);
+                }
+                else 
+                    logger.info('update complete');
+            });
+        };
+    });
+});
+
+
+bot.onText(/\/ultimanews/, function (msg, match) {
+    var fromId = msg.from.id;
+    var newsText = 'Ultima news non trovata nel DataBase';
+    bot.sendMessage(fromId, 'Ecco l\'ultima news: ' + newsText);
+    logger.info('Telegram-onMsg ultimanews from: ' + msg.from.username.toString() + ' testo: ' + newsText);
+    //salvare in DB
 });
 
 // Any kind of message
@@ -47,6 +99,20 @@ bot.on('message', function (msg) {
     var fromId = msg.from.id;
     logger.info('Telegram-onMsg generic: '+ msg.text + ', from: ' + msg.from.username.toString());
 });
+
+
+db.on('error', function (err) {
+    logger.error('database error', err)
+})
+
+db.on('connect', function () {
+    logger.info('database connected')
+})
+
+db.on('close', function () {
+    logger.info('database closed')
+})
+
 /*
 
 var idPierG = 33422195;
