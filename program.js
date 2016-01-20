@@ -1,8 +1,8 @@
-//var express = require('express');
 var TelegramBot = require('node-telegram-bot-api');
-//var db = mongodb(shortUrl);
 var logger = require('./libs/log.js');
 var config = require('config');
+//var express = require('express');
+//var db = mongodb(shortUrl);
 
 var bot = "";
 
@@ -23,21 +23,21 @@ else {
 bot.onText(/\/echo (.+)/, function (msg, match) {
     var fromId = msg.from.id;
     var resp = match[1];
-    logger.info('onText: echo '+ msg.text + ', from: ' + msg.from.username.toString());
+    logger.info('Telegram-onText: echo '+ msg.text + ', from: ' + msg.from.username.toString());
     bot.sendMessage(fromId, resp);
 });
 
 bot.onText(/\/chisono/, function (msg, match) {
     var fromId = msg.from.id;
     var fromUser = msg.from.username.toString();
-    logger.info('onText: WhoAmI - (' + fromId + ') ' + fromUser);
+    logger.info('Telegram-onText: chisono - (' + fromId + ') ' + fromUser);
     bot.sendMessage(fromId, 'Sei: ' + fromUser);
 });
 
 bot.onText(/\/suggerisco (.+)/, function (msg, match) {
     var fromId = msg.from.id;
     var resp = match[1];
-    logger.info('onText: suggest '+ msg.text + ', from: ' + msg.from.username.toString());
+    logger.info('Telegram-onText: suggerisco '+ msg.text + ', from: ' + msg.from.username.toString());
     bot.sendMessage(fromId, 'Grazie per suggerire: "' + match[1] + '"');
     
 });
@@ -45,7 +45,7 @@ bot.onText(/\/suggerisco (.+)/, function (msg, match) {
 // Any kind of message
 bot.on('message', function (msg) {
     var fromId = msg.from.id;
-    logger.info('onMsg: '+ msg.text + ', from: ' + msg.from.username.toString());
+    logger.info('Telegram-onMsg generic: '+ msg.text + ', from: ' + msg.from.username.toString());
 });
 /*
 
