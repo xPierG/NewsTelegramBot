@@ -118,15 +118,23 @@ bot.onText(/\/start/, function (msg, match) {
 
 bot.onText(/\/ultimanews/, function (msg, match) {
     var fromId = msg.from.id;
-    var newsText = 'Ultima news non trovata nel DataBase';
-    bot.sendMessage(fromId, 'Ecco l\'ultima news: ' + newsText);
-    logger.info('Telegram-onMsg ultimanews from: ' + msg.from.username.toString() + ' testo: ' + newsText);
-    //salvare in DB
+    var newsText = 'Spiacente, non ci sono news';
+
+    //cerchiamo nel DB in DB
+    var myCollection = db.collection('LastNews');
+    myCollection.find({newsType: 'news'}, function (err, docs) {
+        if (err || !docs.length) {
+            logger.warn('LastNews - news: not found in Users DB');
+        }
+        else
+            newsText = docs[0].newsText;
+        bot.sendMessage(fromId, 'Ecco l\'ultima news: ' + newsText);
+        logger.info('Telegram-onMsg ultimanews from: ' + msg.from.username.toString() + ' testo: ' + newsText);
+    });
 });
 
 // Any kind of message
 bot.on('message', function (msg) {
-    var fromId = msg.from.id;
     logger.info('Telegram-onMsg generic: '+ msg.text + ', from: ' + msg.from.username.toString());
 });
 
@@ -142,64 +150,3 @@ db.on('connect', function () {
 db.on('close', function () {
     logger.info('database closed')
 })
-
-/*
-
-var idPierG = 33422195;
-var idDiego = 26248661;
-for (var i=1; i<4; i++) {
-    bot.sendMessage(idPierG, 'Messaggio special #' + i + ' solo per PierG');
-    bot.sendMessage(idDiego, 'Messaggio special #' + i + ' solo per Diego');
-};
-
-//lets require/import the mongodb native drivers.
-var mongodb = require('mongojs');
-var idPierG = 33422195;
-var idDiego = 26248661;
-
-// Connection URL. This is where your mongodb server is running.
-var url = 'mongodb://user:cippalippa@ds045795.mongolab.com:45795/pierg_telegram_test';
-var shortUrl = 'user:cippalippa@ds045795.mongolab.com:45795/pierg_telegram_test';
-
-
-
-var myCollection = db.collection('users');
-
-myCollection.find(function (err, docs) {
-    // docs is an array of all the documents in mycollection
-    console.log('found all');
-    docs.forEach(function(element) {
-        console.log('Id: ' + element.chatId + ' Name:' + element.userName);
-    }, this);
-});
-
-myCollection.find({userName: 'PierG'}, function (err, docs) {
-    if (err) {// || !docs.lenght) {
-        console.log('PierG not found');
-    }
-    else {
-        var element = docs[0];
-        console.log('found PierG');
-        console.log('Id: ' + element.chatId + ' Name:' + element.userName);        
-        myCollection.update({userName: element.userName}, {$set: {newField: Number(idPierG)}}, {}, function (err, updated) {
-            if (err) {
-                console.log('Error in update: ' + err);
-            }
-            else 
-                console.log('update complete');
-        });
-    };
-});
-
-db.on('error', function (err) {
-    console.log('database error', err)
-})
-
-db.on('connect', function () {
-    console.log('database connected')
-})
-
-db.on('close', function () {
-    console.log('database closed')
-})
-*/
