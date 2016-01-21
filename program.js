@@ -54,17 +54,15 @@ bot.onText(/\/suggerisco (.+)/, function (msg, match) {
     logger.info('Telegram-onText: suggerisco '+ mySuggestion + ', from: ' + username);
     
     bot.sendMessage(fromId, 'Grazie per suggerire: "' + mySuggestion + '"');
-
-    //METTI NEL DATABASE
-    //salvare in DB
-    //var datetime = new Date();
     
+    //Suggestions will be saved in the DB for future review
     var myCollection = db.collection('suggestions');
     myCollection.insert({userName: username, 
                          chatid: fromId,
                          firstName: msg.from.first_name,
                          lastName: msg.from.last_name, 
-                         suggestion: mySuggestion, timestamp: new Date().toString()}, function (err, res) {
+                         suggestion: mySuggestion, 
+                         timestamp: new Date().toString()}, function (err, res) {
         if (err) {
             logger.error('Error in insert new suggestion: ' + err);
         }
@@ -87,22 +85,29 @@ bot.onText(/\/start/, function (msg, match) {
 
     //salvare in DB
     var myCollection = db.collection('users');
-    myCollection.find({userName: username}, function (err, docs) {
+    myCollection.find({chatId: fromId}, function (err, docs) {
         if (err || !docs.length) {
-            logger.warn(username + ' not found');
-            myCollection.insert({userName: username, chatid: fromId}, function (err, res) {
+            logger.warn('Id: ' + fromId + ' not found in Users DB');
+            myCollection.insert({userName: username, 
+                                chatId: fromId,
+                                firstName: msg.from.first_name,
+                                lastName: msg.from.last_name, 
+                                suggestion: mySuggestion, 
+                                timestamp: new Date().toString()}, function (err, res) {
                 if (err) {
-                    logger.error('Error in insert new user: ' + err);
+                    logger.error('Error in insert new user ' + username + ' Err: ' + err);
                 }
                 else 
                     logger.info('Update complete. Inserted ' + username + ' Id:' + fromId);
             });
         }
+/* not sure it's useful
         else {
+            //Update name just in case he changed it
             var element = docs[0];
-            logger.info('found ' + username);
+            logger.info('Found Id in DB: ' + fromId);
             logger.info('Id: ' + element.chatId + ' Name:' + element.userName);        
-            myCollection.update({userName: element.userName}, {$set: {chatId: element.chatId}}, {}, function (err, updated) {
+            myCollection.update({chatId: element.chatId}, {$set: {userName: element.userName}}, {}, function (err, updated) {
                 if (err) {
                     logger.error('Error in update user: ' + err);
                 }
@@ -110,6 +115,7 @@ bot.onText(/\/start/, function (msg, match) {
                     logger.info('update complete');
             });
         };
+*/
     });
 });
 

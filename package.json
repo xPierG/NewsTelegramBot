@@ -1,0 +1,31 @@
+{
+  "name": "newstelegrambot",
+  "version": "0.0.1",
+  "description": "A Telegram bot that works like an RSS feeds aggreagator",
+  "main": "program.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "node-telegram-bot-api": "^0.19.2",
+    "config": "^1.19.0",
+    "mongojs": "^2.3.0",
+    "winston": "^2.1.1",
+    "express": "^4.13.3",
+    "nodemailer": "^2.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xPierG/NewsTelegramBot.git"
+  },
+  "author": "Piergiorgio Grossi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xPierG/NewsTelegramBot/issues"
+  },
+  "homepage": "https://github.com/xPierG/NewsTelegramBot#readme"
+}
