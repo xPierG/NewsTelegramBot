@@ -92,7 +92,6 @@ bot.onText(/\/start/, function (msg, match) {
                                 chatId: fromId,
                                 firstName: msg.from.first_name,
                                 lastName: msg.from.last_name, 
-                                suggestion: mySuggestion, 
                                 timestamp: new Date().toString()}, function (err, res) {
                 if (err) {
                     logger.error('Error in insert new user ' + username + ' Err: ' + err);
