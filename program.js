@@ -6,9 +6,11 @@ var mongodb = require('mongojs');
 
 var bot = "";
 var db = "";
+var transporter = "";
 
 logger.info('Application starts');
 
+//LOAD Telegram Interface
 if (config.has('Telegram.TelegramToken')) {
     var token = config.get('Telegram.TelegramToken');
     logger.info('Connecting with telegram bot with TOKEN: ' + token);
@@ -20,6 +22,7 @@ else {
     logger.error('Cannot read Telegram TOKEN from configuration file dafault.json');
 }
 
+//LOAD Database
 if (config.has('DataBase.URL')) {
     // Connection URL. This is where your mongodb server is running.
     var shortUrl = config.get('DataBase.URL');
@@ -29,7 +32,7 @@ else {
     logger.error('Cannot read DB address from configuration file dafault.json');    
 }
 
-// Matches /echo [whatever]
+//Listen to Telegram Messages
 bot.onText(/\/echo (.+)/, function (msg, match) {
     var fromId = msg.from.id;
     var resp = match[1];
@@ -46,9 +49,29 @@ bot.onText(/\/chisono/, function (msg, match) {
 
 bot.onText(/\/suggerisco (.+)/, function (msg, match) {
     var fromId = msg.from.id;
-    var resp = match[1];
-    logger.info('Telegram-onText: suggerisco '+ msg.text + ', from: ' + msg.from.username.toString());
-    bot.sendMessage(fromId, 'Grazie per suggerire: "' + match[1] + '"');
+    var username = msg.from.username.toString();
+    var mySuggestion = match[1];
+    logger.info('Telegram-onText: suggerisco '+ mySuggestion + ', from: ' + username);
+    
+    bot.sendMessage(fromId, 'Grazie per suggerire: "' + mySuggestion + '"');
+
+    //METTI NEL DATABASE
+    //salvare in DB
+    //var datetime = new Date();
+    
+    var myCollection = db.collection('suggestions');
+    myCollection.insert({userName: username, 
+                         chatid: fromId,
+                         firstName: msg.from.first_name,
+                         lastName: msg.from.last_name, 
+                         suggestion: mySuggestion, timestamp: new Date().toString()}, function (err, res) {
+        if (err) {
+            logger.error('Error in insert new suggestion: ' + err);
+        }
+        else 
+            logger.info('Inserted new suggestion. User: ' + username + ' Id: ' + fromId + ' Suggestion: ' + mySuggestion);
+    });
+
 });
 
 bot.onText(/\/start/, function (msg, match) {
@@ -56,6 +79,11 @@ bot.onText(/\/start/, function (msg, match) {
     var username = msg.from.username.toString();
     bot.sendMessage(fromId, 'Benvenuto: ' + msg.from.username.toString());
     logger.info('Telegram-onMsg start - from: ' + msg.from.username.toString());
+
+//CONTROLLARE L'ID E NON IL NOME
+//SALVARE PIU' INFO su UTENTE
+//SALVARE TIMESTAMP
+
 
     //salvare in DB
     var myCollection = db.collection('users');
@@ -121,38 +149,6 @@ for (var i=1; i<4; i++) {
     bot.sendMessage(idPierG, 'Messaggio special #' + i + ' solo per PierG');
     bot.sendMessage(idDiego, 'Messaggio special #' + i + ' solo per Diego');
 };
-
-// Matches /echo [whatever]
-bot.onText(/\/echo (.+)/, function (msg, match) {
-    var fromId = msg.from.id;
-    var resp = match[1];
-    console.log('onText: echo '+ msg + ', from: ' + msg.from.username.toString());
-    bot.sendMessage(fromId, resp);
-});
-// Matches /echo [whatever]
-bot.onText(/\/DO (.+)/, function (msg, match) {
-    var fromId = msg.from.id;
-    var resp = match[1];
-    console.log('onText: DO '+ msg + ', from: ' + msg.from.username.toString());
-    bot.sendMessage(fromId, resp);
-});
-
-// What's a contact?
-//bot.on('contact', function (msg, match) {
-//    console.log('onText: ' + resp + ', fromId:' + fromId);
-//});
-
-// Any kind of message
-bot.on('message', function (msg) {
-    var fromId = msg.from.id;
-    console.log('onMsg: '+ msg + ', from: ' + msg.from.username.toString());
-    var chatId = msg.chat.id;
-    // photo can be: a file path, a stream or a Telegram file_id
-    //var photo = 'cats.png';
-    //bot.sendPhoto(chatId, photo, {caption: 'Lovely kittens'});
-    console.log('fromId: ' + chatId + ' ciao');
-    bot.sendMessage(fromId, 'chatId: ' + chatId + ' ciao');
-});
 
 //lets require/import the mongodb native drivers.
 var mongodb = require('mongojs');
