@@ -43,8 +43,10 @@ bot.onText(/\/echo (.+)/, function (msg, match) {
 bot.onText(/\/chisono/, function (msg, match) {
     var fromId = msg.from.id;
     var fromUser = msg.from.username.toString();
+    var firstName = msg.from.first_name;
+    var lastName = msg.from.last_name; 
     logger.info('Telegram-onText: chisono - (' + fromId + ') ' + fromUser);
-    bot.sendMessage(fromId, 'Sei: ' + fromUser);
+    bot.sendMessage(fromId, 'Sei ' + fromUser + ' (' + firstName + ' ' + lastName + ')');
 });
 
 bot.onText(/\/suggerisco (.+)/, function (msg, match) {
@@ -77,11 +79,6 @@ bot.onText(/\/start/, function (msg, match) {
     var username = msg.from.username.toString();
     bot.sendMessage(fromId, 'Benvenuto: ' + msg.from.username.toString());
     logger.info('Telegram-onMsg start - from: ' + msg.from.username.toString());
-
-//CONTROLLARE L'ID E NON IL NOME
-//SALVARE PIU' INFO su UTENTE
-//SALVARE TIMESTAMP
-
 
     //salvare in DB
     var myCollection = db.collection('users');
