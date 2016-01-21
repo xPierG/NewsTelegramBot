@@ -1,9 +1,10 @@
-sudo npm install express
-sudo npm install node-telegram-bot-api
-sudo npm install mongojs
-sudo npm install -g mocha
-sudo npm install config
-sudo npm install winston
+sudo npm install --save express
+sudo npm install --save node-telegram-bot-api
+sudo npm install --save mongojs
+sudo npm install --save mocha
+sudo npm install --save config
+sudo npm install --save winston
+sudo npm install --save body-parser
 
 Create a default.json inside /config dir with proper items
 

@@ -2,8 +2,10 @@ var TelegramBot = require('node-telegram-bot-api');
 var logger = require('./libs/log.js');
 var config = require('config');
 var mongodb = require('mongojs');
-//var express = require('express');
+var express = require('express');
+var bodyParser = require('body-parser');
 
+var app = express();
 var bot = "";
 var db = "";
 var transporter = "";
@@ -30,6 +32,22 @@ if (config.has('DataBase.URL')) {
 }
 else {
     logger.error('Cannot read DB address from configuration file dafault.json');    
+}
+
+//LOAD Webhook for listening IFTTT
+if (config.has('ListeningServer.PortId')) {
+    //start listening: waiting for IFTTT
+    var PortId = config.get('ListeningServer.PortId');
+    app.use( bodyParser.json() );       // to support JSON-encoded bodies - name=foo&color=red <-- URL encoding
+    app.use(bodyParser.urlencoded({     // to support URL-encoded bodies - {"name":"foo","color":"red"}  <-- JSON encoding
+        extended: true
+    }));     
+    app.listen(Number(PortId), function () {
+    logger.info('Listening on port ' + PortId);
+    })
+}
+else {
+    logger.error('Cannot read port ID from configuration file dafault.json');    
 }
 
 //Listen to Telegram Messages
@@ -139,6 +157,66 @@ bot.on('message', function (msg) {
 });
 
 
+//IFTTT MESSAGES
+app.all('*', function (req, res, next) {
+    logger.info('Something is coming from internet');
+    next();
+})
+
+app.post('/sendMessage', function (req, res) {
+    logger.info('Data arrived: \'' + req.body.text + '\' of type: ' + req.body.type);
+    res.send('OK Tx');
+    
+    //Add to DB
+    var myCollection = db.collection('LastNews');
+    myCollection.find({newsType: req.body.type}, function (err, docs) {
+        if (err || !docs.length) {
+            logger.warn('Last news of type: ' + req.body.type + ' not found in LastNews DB');
+            myCollection.insert({newsType: req.body.type, 
+                                newsText: req.body.text}, function (err, res) {
+                if (err) {
+                    logger.error('Error in insert last news ' + req.body.text + ' of type: ' + req.body.type + ' Err: ' + err);
+                }
+                else 
+                    logger.info('Update complete. Inserted ' + req.body.text + ' of type: ' + req.body.type);
+            });
+        }
+        else {
+           myCollection.update({newsType: req.body.type}, {$set: {newsText: req.body.text}}, {}, function (err, updated) {
+                if (err) {
+                    logger.error('Error in update last news ' + req.body.text + ' of type: ' + req.body.type + ' Err: ' + err);
+                }
+                else 
+                    logger.info('Update complete. Inserted ' + req.body.text + ' of type: ' + req.body.type);
+            });            
+        }
+    });
+    
+    //Send to all users
+});
+
+app.post('/', function (req, res) {
+  res.send('Got a POST request');
+});
+
+app.all('/', function (req, res, next) {
+  console.log('Accessing / ...');
+  next(); // pass control to the next handler
+});
+
+app.all('/sendMessage', function (req, res, next) {
+  console.log('Accessing /sendMessage ...');
+  next(); // pass control to the next handler
+});
+
+app.use(function(err, req, res, next) {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
+
+
+//DB MESSAGES
 db.on('error', function (err) {
     logger.error('database error', err)
 })
