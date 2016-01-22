@@ -178,7 +178,7 @@ app.post('/sendMessage', function (req, res) {
                     logger.error('Error in insert last news ' + req.body.text + ' of type: ' + req.body.type + ' Err: ' + err);
                 }
                 else 
-                    logger.info('Update complete. Inserted ' + req.body.text + ' of type: ' + req.body.type);
+                    logger.info('DB update complete. Inserted ' + req.body.text + ' of type: ' + req.body.type);
             });
         }
         else {
@@ -187,7 +187,7 @@ app.post('/sendMessage', function (req, res) {
                     logger.error('Error in update last news ' + req.body.text + ' of type: ' + req.body.type + ' Err: ' + err);
                 }
                 else 
-                    logger.info('Update complete. Inserted ' + req.body.text + ' of type: ' + req.body.type);
+                    logger.info('DB update complete. Inserted ' + req.body.text + ' of type: ' + req.body.type);
             });            
         }
     });
