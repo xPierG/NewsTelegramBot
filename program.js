@@ -193,6 +193,20 @@ app.post('/sendMessage', function (req, res) {
     });
     
     //Send to all users
+    if( req.body.type == 'official') {
+        var usersCollection = db.collection('users');
+        usersCollection.find(function (err, users) {
+            if (err || !users.length)
+                logger.warn('No users found in DB');
+            else {
+                users.forEach(function(user) {
+                    bot.sendMessage(user.chatId, req.body.text);  
+                    logger.info('Sent to: \'' + user.userName + '\' message of type: \'' + req.body.type + '\' text: ' + req.body.text + '\'');  
+                }, this);
+            }
+        });
+    }
+    
 });
 
 app.post('/', function (req, res) {
