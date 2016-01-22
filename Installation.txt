@@ -5,6 +5,7 @@ sudo npm install --save mocha
 sudo npm install --save config
 sudo npm install --save winston
 sudo npm install --save body-parser
+sudo npm install --save requestify
 
 Create a default.json inside /config dir with proper items
 

@@ -4,6 +4,7 @@ var config = require('config');
 var mongodb = require('mongojs');
 var express = require('express');
 var bodyParser = require('body-parser');
+var requestify = require('requestify');
 
 var app = express();
 var bot = "";
@@ -48,6 +49,28 @@ if (config.has('ListeningServer.PortId')) {
 }
 else {
     logger.error('Cannot read port ID from configuration file dafault.json');    
+}
+
+var urlToPing = '';
+//LOAD URL for pinging
+if (config.has('Ping.URL')) {
+    urlToPing = config.get('Ping.URL');
+    setTimeout(SendPingToCreators, 5 * 1000); //24 hours 24 * 60 * 60 * 
+    logger.info('Start sending Ping at URL ' + urlToPing);
+}
+else {
+    logger.error('Cannot read port UrlToPing from configuration file dafault.json');    
+}
+
+function SendPingToCreators ()
+{
+    requestify.post(urlToPing)
+    .then(function(response) {
+        // Che me ne faccio?
+        response.getBody();
+    }); 
+    logger.info("Alive");
+    setTimeout(SendPingToCreators, 5*1000); //24 hours 24 * 60 * 60 * 
 }
 
 //Listen to Telegram Messages
