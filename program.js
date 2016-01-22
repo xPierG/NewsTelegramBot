@@ -68,6 +68,9 @@ function SendPingToCreators ()
     .then(function(response) {
         // Che me ne faccio?
         response.getBody();
+    })
+    .catch(function(error) {
+        logger.error(error);
     }); 
     logger.info("Alive");
     setTimeout(SendPingToCreators, 5*1000); //24 hours 24 * 60 * 60 * 
