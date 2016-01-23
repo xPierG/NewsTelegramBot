@@ -225,7 +225,7 @@ bot.on('message', function (msg) {
 
 //IFTTT MESSAGES
 app.all('*', function (req, res, next) {
-    logger.info('Something is coming from internet');
+    logger.info('Something is coming from internet. Body: ' + req.body.text);
     next();
 })
 
@@ -275,12 +275,14 @@ app.post('/sendMessage', function (req, res) {
     
 });
 
+/*
 app.post('/', function (req, res) {
+  logger.info('Got a POST request on \/');
   res.send('Got a POST request');
 });
 
 app.all('/', function (req, res, next) {
-  console.log('Accessing / ...');
+  logger.log('Accessing / ...');
   next(); // pass control to the next handler
 });
 
@@ -293,7 +295,7 @@ app.use(function(err, req, res, next) {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
-
+*/
 
 
 //DB MESSAGES
