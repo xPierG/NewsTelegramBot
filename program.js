@@ -105,7 +105,6 @@ function SendPingToCreators ()
     .then(function(response) {
         // Che me ne faccio?
         var body = response.getBody();
-        logger.info('From UrlToPing: ' + body.text);
     })
     .catch(function(error) {
         logger.error(error);
@@ -208,12 +207,48 @@ bot.onText(/\/ultimanews/, function (msg, match) {
     var myCollection = db.collection('LastNews');
     myCollection.find({newsType: 'news'}, function (err, docs) {
         if (err || !docs.length) {
-            logger.warn('LastNews - news: not found in Users DB');
+            logger.warn('LastNews - news: not found in LastNews DB');
         }
         else
             newsText = docs[0].newsText;
         bot.sendMessage(fromId, 'Ecco l\'ultima news: ' + newsText);
         logger.info('Telegram-onMsg ultimanews from: ' + msg.from.username.toString() + ' testo: ' + newsText);
+    });
+});
+
+
+bot.onText(/\/ultimaufficiale/, function (msg, match) {
+    var fromId = msg.from.id;
+    var newsText = 'Spiacente, non ci sono news dai canali ufficiali';
+
+    //cerchiamo nel DB in DB
+    var myCollection = db.collection('LastNews');
+    myCollection.find({newsType: 'official'}, function (err, docs) {
+        if (err || !docs.length) {
+            logger.warn('LastNews - official: not found in LastNews DB');
+        }
+        else
+            newsText = docs[0].newsText;
+        bot.sendMessage(fromId, 'Ecco l\'ultima news dai canali ufficiali: ' + newsText);
+        logger.info('Telegram-onMsg ultimaufficiale from: ' + msg.from.username.toString() + ' testo: ' + newsText);
+    });
+});
+
+
+bot.onText(/\/ultimameteo/, function (msg, match) {
+    var fromId = msg.from.id;
+    var newsText = 'Spiacente, non ci sono news dai canali meteo';
+
+    //cerchiamo nel DB in DB
+    var myCollection = db.collection('LastNews');
+    myCollection.find({newsType: 'weather'}, function (err, docs) {
+        if (err || !docs.length) {
+            logger.warn('LastNews - weather: not found in LastNews DB');
+        }
+        else
+            newsText = docs[0].newsText;
+        bot.sendMessage(fromId, 'Ecco l\'ultima news dai canali meteo: ' + newsText);
+        logger.info('Telegram-onMsg ultimameteo from: ' + msg.from.username.toString() + ' testo: ' + newsText);
     });
 });
 
