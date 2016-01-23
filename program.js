@@ -199,6 +199,15 @@ bot.onText(/\/start/, function (msg, match) {
 });
 
 
+bot.onText(/\/ultima/, function (msg, match) {
+    var fromId = msg.from.id;
+    var keyboard = {keyboard: ['\/ultimanews', '\/ultimaufficiale'], 
+                    selective: true};
+    bot.sendMessage(fromId, 'Quale ultima notizia vuoi?', keyboard);
+    logger.info('Sent custom keyboard \/ultima to user: ' + fromId);
+});
+
+
 bot.onText(/\/ultimanews/, function (msg, match) {
     var fromId = msg.from.id;
     var newsText = 'Spiacente, non ci sono news';
