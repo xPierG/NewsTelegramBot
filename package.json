@@ -18,10 +18,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-//  "repository": {
-//    "type": "git",
-//    "url": "git+https://github.com/xPierG/NewsTelegramBot.git"
-//  },
   "author": "Piergiorgio Grossi",
   "license": "ISC",
   "bugs": {
@@ -33,4 +29,3 @@
   "main": "program.js",
   "homepage": "https://github.com/xPierG/NewsTelegramBot#readme"
 }
-
