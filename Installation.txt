@@ -19,7 +19,7 @@ suggerisco - Puoi scrivere, dopo uno spazio, un suggerimento per me, un messaggi
 ultimanews - Testo dell'ultima news che ho selezionato per te
 ultimaufficiale - Testo dell'ultima news dai canali ufficiali della città
 ultimameto - Testo dell'ultima notizia meteo
-
+ultimissime - Ti permette di selezionare quale news vuoi
 
 DESCRIPTION
 /setdescription

@@ -199,11 +199,13 @@ bot.onText(/\/start/, function (msg, match) {
 });
 
 
-bot.onText(/\/ultima/, function (msg, match) {
+bot.onText(/\/ultimissime/, function (msg, match) {
     var fromId = msg.from.id;
-    var keyboard = {keyboard: ['\/ultimanews', '\/ultimaufficiale'], 
+    var keyboard = {keyboard: [['\/ultimanews', '\/ultimaufficiale'],['\/ultimameteo']],
+                    one_time_keyboard: true, 
                     selective: true};
-    bot.sendMessage(fromId, 'Quale ultima notizia vuoi?', keyboard);
+    var sendMessageOptions = {reply_markup: keyboard};
+    bot.sendMessage(fromId, 'Quale ultima notizia vuoi?', sendMessageOptions);
     logger.info('Sent custom keyboard \/ultima to user: ' + fromId);
 });
 
