@@ -33,7 +33,7 @@ else {
 }
 if (process.env.BOT_TELEGRAM_TOKEN) {
     telegramToken = process.env.BOT_TELEGRAM_TOKEN;
-    logger.error('Using ENV variable for BOT_TELEGRAM_TOKEN');  
+    logger.info('Using ENV variable for BOT_TELEGRAM_TOKEN');  
 }
 // Setup polling way
 bot = new TelegramBot(telegramToken, {polling: true});
