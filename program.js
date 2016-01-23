@@ -10,6 +10,8 @@ var app = express();
 var bot = "";
 var db = "";
 var transporter = "";
+var token = '0';
+var shortDBUrl = "";
 
 logger.info('Application starts');
 
@@ -20,25 +22,25 @@ logger.info( "Server IP " + server_ip_address + ", server_port " + server_port )
 
 //LOAD Telegram Interface
 if (config.has('Telegram.TelegramToken')) {
-    var token = config.get('Telegram.TelegramToken');
+    token = config.get('Telegram.TelegramToken');
     logger.info('Connecting with telegram bot with TOKEN: ' + token);
-    // Setup polling way
-    bot = new TelegramBot(token, {polling: true});
-    logger.info('Connected');
 }
 else {
     logger.error('Cannot read Telegram TOKEN from configuration file dafault.json');
 }
+// Setup polling way
+bot = new TelegramBot(token, {polling: true});
+logger.info('Connected');
 
 //LOAD Database
 if (config.has('DataBase.URL')) {
     // Connection URL. This is where your mongodb server is running.
-    var shortUrl = config.get('DataBase.URL');
-    db = mongodb(shortUrl);
+    shortDBUrl = config.get('DataBase.URL');
 }
 else {
     logger.error('Cannot read DB address from configuration file dafault.json');    
 }
+db = mongodb(shortDBUrl);
 
 //LOAD Webhook for listening IFTTT
 if (config.has('ListeningServer.PortId')) {

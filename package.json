@@ -12,20 +12,18 @@
     "mongojs": "^2.3.0",
     "node-telegram-bot-api": "^0.19.2",
     "nodemailer": "^2.0.0",
+    "requestify": "^0.1.17",
     "winston": "^2.1.1"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node program.js"
   },
   "author": "Piergiorgio Grossi",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/xPierG/NewsTelegramBot/issues"
   },
-  "scripts": {
-    "start": "node program.js"
-   },
   "main": "program.js",
   "homepage": "https://github.com/xPierG/NewsTelegramBot#readme"
 }
