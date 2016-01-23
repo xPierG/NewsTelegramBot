@@ -54,6 +54,7 @@ else {
 }
 if (process.env.BOT_DB_CONNECTION){
     shortDBUrl = process.env.BOT_DB_CONNECTION;
+    logger.info('DB connection from ENV: ' + shortDBUrl);
 }
 db = mongodb(shortDBUrl);
 
@@ -68,6 +69,7 @@ else {
 }
 if (process.env.OPENSHIFT_NODEJS_PORT){
     PortId = process.env.OPENSHIFT_NODEJS_PORT;
+    logger.info('PortId to lisening IFTTT: ' + PortId);
 }
 app.use( bodyParser.json() );       // to support JSON-encoded bodies - name=foo&color=red <-- URL encoding
 app.use( bodyParser.urlencoded({     // to support URL-encoded bodies - {"name":"foo","color":"red"}  <-- JSON encoding
