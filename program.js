@@ -12,17 +12,9 @@ var db = "";
 
 logger.info('Application starts');
 
-//OpneShift Configuration
-/*
-var server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080
-var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
-logger.info( "Server IP " + server_ip_address + ", server_port " + server_port );
-app.listen(server_port, server_ip_address, function () {
-  console.log( "Listening on " + server_ip_address + ", server_port " + server_port);
-});
-*/
-
+//
 //LOAD Telegram Interface
+//
 var telegramToken = 0;
 if (config.has('Telegram.TelegramToken')) {
     telegramToken = config.get('Telegram.TelegramToken');
@@ -42,8 +34,9 @@ if (bot)
 else
     logger.error('Cannot start TelegramBot');
 
-
+//
 //LOAD Database
+//
 var shortDBUrl = "";
 if (config.has('DataBase.URL')) {
     // Connection URL. This is where your mongodb server is running.
@@ -58,7 +51,9 @@ if (process.env.BOT_DB_CONNECTION){
 }
 db = mongodb(shortDBUrl);
 
+//
 //LOAD Webhook for listening IFTTT
+//
 var PortId = 0;
 if (config.has('ListeningServer.PortId')) {
     //start listening: waiting for IFTTT
@@ -89,10 +84,11 @@ catch(err) {
 }
 
 var urlToPing = '';
+//
 //LOAD URL for pinging
+//
 if (config.has('Ping.URL')) {
-    urlToPing = config.get('Ping.URL');
-    logger.info('Start sending Ping at URL ' + urlToPing);
+    urlToPing = config.get('Ping.URL');    
 }
 else {
     logger.error('Cannot read port UrlToPing from configuration file dafault.json');    
@@ -100,14 +96,16 @@ else {
 if (process.env.BOT_URL_TO_PING){
     urlToPing = process.env.BOT_URL_TO_PING;
 }
-setTimeout(SendPingToCreators, 5 * 1000); //24 hours 24 * 60 * 60 * 
+logger.info('Start sending Ping at URL ' + urlToPing);
+setTimeout(SendPingToCreators, 1000); //1 second
 
 function SendPingToCreators ()
 {
     requestify.post(urlToPing)
     .then(function(response) {
         // Che me ne faccio?
-        response.getBody();
+        var body = response.getBody();
+        logger.info('From UrlToPing: ' + body.text);
     })
     .catch(function(error) {
         logger.error(error);
@@ -116,7 +114,9 @@ function SendPingToCreators ()
     setTimeout(SendPingToCreators, 24 * 60 * 60 * 1000); //24 hours 
 }
 
+//
 //Listen to Telegram Messages
+//
 bot.onText(/\/echo (.+)/, function (msg, match) {
     var fromId = msg.from.id;
     var resp = match[1];
@@ -222,8 +222,9 @@ bot.on('message', function (msg) {
     logger.info('Telegram-onMsg generic: '+ msg.text + ', from: ' + msg.from.username.toString());
 });
 
-
+//
 //IFTTT MESSAGES
+//
 app.all('*', function (req, res, next) {
     logger.info('Something is coming from internet. Body: ' + req.body.text);
     next();
@@ -274,28 +275,6 @@ app.post('/sendMessage', function (req, res) {
     }
     
 });
-
-/*
-app.post('/', function (req, res) {
-  logger.info('Got a POST request on \/');
-  res.send('Got a POST request');
-});
-
-app.all('/', function (req, res, next) {
-  logger.log('Accessing / ...');
-  next(); // pass control to the next handler
-});
-
-app.all('/sendMessage', function (req, res, next) {
-  console.log('Accessing /sendMessage ...');
-  next(); // pass control to the next handler
-});
-
-app.use(function(err, req, res, next) {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
-});
-*/
 
 
 //DB MESSAGES
