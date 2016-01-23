@@ -2,7 +2,6 @@
   "name": "newstelegrambot",
   "version": "0.0.1",
   "description": "A Telegram bot that works like an RSS feeds aggreagator",
-  "main": "program.js",
   "directories": {
     "test": "test"
   },
@@ -29,9 +28,9 @@
     "url": "https://github.com/xPierG/NewsTelegramBot/issues"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node program.js"
    },
-  "main": "server.js",
+  "main": "program.js",
   "homepage": "https://github.com/xPierG/NewsTelegramBot#readme"
 }
 
