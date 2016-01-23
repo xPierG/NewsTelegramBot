@@ -13,6 +13,11 @@ var transporter = "";
 
 logger.info('Application starts');
 
+//OpneShift Configuration
+var server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080
+var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
+logger.info( "Server IP " + server_ip_address + ", server_port " + server_port );
+
 //LOAD Telegram Interface
 if (config.has('Telegram.TelegramToken')) {
     var token = config.get('Telegram.TelegramToken');
@@ -73,7 +78,7 @@ function SendPingToCreators ()
         logger.error(error);
     }); 
     logger.info("Alive");
-    setTimeout(SendPingToCreators, 5*1000); //24 hours 24 * 60 * 60 * 
+    setTimeout(SendPingToCreators, 24 * 60 * 60 * 1000); //24 hours 
 }
 
 //Listen to Telegram Messages

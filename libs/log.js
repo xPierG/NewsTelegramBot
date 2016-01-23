@@ -2,8 +2,8 @@ var winston = require('winston');
 
 winston.emitErrs = true;
 
-var serverLogDir = process.env.OPENSHIFT_LOG_DIR || ./logs/;
-var serverLogFile = serverLogDir + all-logs.log;
+var serverLogDir = process.env.OPENSHIFT_LOG_DIR || './logs/';
+var serverLogFile = serverLogDir + 'all-logs.log';
 
 
 var logger = new winston.Logger({
