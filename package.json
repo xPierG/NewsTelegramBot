@@ -24,6 +24,7 @@
   "bugs": {
     "url": "https://github.com/xPierG/NewsTelegramBot/issues"
   },
+  "private": true,
   "main": "program.js",
   "homepage": "https://github.com/xPierG/NewsTelegramBot#readme"
 }
