@@ -72,7 +72,7 @@ if (process.env.OPENSHIFT_NODEJS_PORT){
     logger.info('PortId to lisening IFTTT: ' + PortId);
 }
 var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
-logger.info("listening from IP: " + server_ip_address + ' on port: ' + PortId);
+logger.info("Ready to listen from IP: " + server_ip_address + ' on port: ' + PortId);
 
 app.use( bodyParser.json() );       // to support JSON-encoded bodies - name=foo&color=red <-- URL encoding
 app.use( bodyParser.urlencoded({     // to support URL-encoded bodies - {"name":"foo","color":"red"}  <-- JSON encoding
@@ -80,7 +80,7 @@ app.use( bodyParser.urlencoded({     // to support URL-encoded bodies - {"name":
 }));     
 
 try {
-    app.listen(Number(PortId), function () {
+    app.listen(Number(PortId), server_ip_address, function () {
         logger.info('Listening on port ' + PortId);
     });
 }
