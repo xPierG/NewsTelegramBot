@@ -1,11 +1,16 @@
 var winston = require('winston');
+
 winston.emitErrs = true;
+
+var serverLogDir = process.env.OPENSHIFT_LOG_DIR || ./logs/;
+var serverLogFile = serverLogDir + all-logs.log;
+
 
 var logger = new winston.Logger({
     transports: [
         new winston.transports.File({
             level: 'info',
-            filename: './logs/all-logs.log',
+            filename: serverLogFile,
             handleExceptions: true,
             json: false,
             maxsize: 5242880, //5MB
