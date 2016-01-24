@@ -406,7 +406,41 @@ app.post('/sendMessage', function (req, res) {
     
     //Send to all users
     var usersCollection = db.collection('users');
-    usersCollection.find({[req.body.type]: 'on'}, function (err, users) {
+    if (req.body.type == 'news')
+    usersCollection.find({news: 'on'}, function (err, users) {
+        if (err || !users.length)
+            logger.warn('No users found in DB with ' + req.body.type + ' type on');
+        else {
+            users.forEach(function(user) {
+                bot.sendMessage(user.chatId, req.body.text);  
+                logger.info('Sent to: \'' + user.userName + '\' message of type: \'' + req.body.type + '\' text: ' + req.body.text + '\'');  
+            }, this);
+        }
+    });
+    if (req.body.type == 'sport')
+    usersCollection.find({sport: 'on'}, function (err, users) {
+        if (err || !users.length)
+            logger.warn('No users found in DB with ' + req.body.type + ' type on');
+        else {
+            users.forEach(function(user) {
+                bot.sendMessage(user.chatId, req.body.text);  
+                logger.info('Sent to: \'' + user.userName + '\' message of type: \'' + req.body.type + '\' text: ' + req.body.text + '\'');  
+            }, this);
+        }
+    });
+    if (req.body.type == 'meteo')
+    usersCollection.find({meteo: 'on'}, function (err, users) {
+        if (err || !users.length)
+            logger.warn('No users found in DB with ' + req.body.type + ' type on');
+        else {
+            users.forEach(function(user) {
+                bot.sendMessage(user.chatId, req.body.text);  
+                logger.info('Sent to: \'' + user.userName + '\' message of type: \'' + req.body.type + '\' text: ' + req.body.text + '\'');  
+            }, this);
+        }
+    });
+    if (req.body.type == 'ufficiale')
+    usersCollection.find({ufficiale: 'on'}, function (err, users) {
         if (err || !users.length)
             logger.warn('No users found in DB with ' + req.body.type + ' type on');
         else {
