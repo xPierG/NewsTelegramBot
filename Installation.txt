@@ -22,8 +22,9 @@ ultimameteo - Testo dell'ultima notizia meteo
 ultimissime - Ti permette di selezionare quale news vuoi
 
 
+configurazione - Decidi gli argomenti sui quali essere aggiornato
+ultimissime - Per accedere a ultima news 
 suggerisco - Dammi un suggerimento, un consiglio, una fonte di news da seguire
-ultimissime - Ti permette di selezionare quale news vuoi
 chisono - Ti dico come ti chiami, rispetto a come hai impostato Telegram
 echo - Scrivi un testo e io te lo riscrivo. Utile vero? :)
 
@@ -31,4 +32,5 @@ echo - Scrivi un testo e io te lo riscrivo. Utile vero? :)
 DESCRIPTION
 /setdescription
 Questo bot raccoglie per te informazioni dai canali social di Reggio Emilia e te li fornisce su Telegram.
-Digitando / potrai vedere le azioni disponibili.
+Digita /configurazione per decidere su quale tema essere aggiornato in tempo reale con i messaggi che arrivano dalle princiali fonti di informazione della città.
+Digita /ultimissime per accedere alle ultime news su Reggio Emilia.
