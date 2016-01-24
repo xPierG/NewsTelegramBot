@@ -261,7 +261,7 @@ bot.onText(/attiva_/, function (msg, match) {
                         bot.sendMessage(fromId, 'OK. Inizierai a ricevere notizie di tipo: ' + toggleType);
                     }
                 });            
-            }
+            
             if (toggleType == 'ufficiale')
             usersCollection.update({chatId: fromId}, {$set: {ufficiale: 'on'}}, {}, function (err, updated) {
                     if (err) {
@@ -272,7 +272,7 @@ bot.onText(/attiva_/, function (msg, match) {
                         bot.sendMessage(fromId, 'OK. Inizierai a ricevere notizie di tipo: ' + toggleType);
                     }
                 });            
-            }
+            
             if (toggleType == 'meteo')
             usersCollection.update({chatId: fromId}, {$set: {meteo: 'on'}}, {}, function (err, updated) {
                     if (err) {
@@ -283,7 +283,7 @@ bot.onText(/attiva_/, function (msg, match) {
                         bot.sendMessage(fromId, 'OK. Inizierai a ricevere notizie di tipo: ' + toggleType);
                     }
                 });            
-            }
+           
         });
     }    
 });
