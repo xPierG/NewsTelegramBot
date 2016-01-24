@@ -180,86 +180,120 @@ bot.onText(/\/start/, function (msg, match) {
                     logger.info('Update complete. Inserted ' + username + ' Id:' + fromId);
             });
         }
-/* not sure it's useful
-        else {
-            //Update name just in case he changed it
-            var element = docs[0];
-            logger.info('Found Id in DB: ' + fromId);
-            logger.info('Id: ' + element.chatId + ' Name:' + element.userName);        
-            myCollection.update({chatId: element.chatId}, {$set: {userName: element.userName}}, {}, function (err, updated) {
-                if (err) {
-                    logger.error('Error in update user: ' + err);
-                }
-                else 
-                    logger.info('update complete');
-            });
-        };
-*/
     });
 });
 
 
 bot.onText(/\/ultimissime/, function (msg, match) {
     var fromId = msg.from.id;
-    var keyboard = {keyboard: [['\/ultimanews', '\/ultimaufficiale'],['\/ultimameteo']],
+    var keyboard = {keyboard: [['\/ultimanews', '\/ultimaufficiale'],['\/ultimameteo', '\/ultimasport'],['abbandona']],
+                    resize_keyboard: true,
                     one_time_keyboard: true, 
                     selective: true};
     var sendMessageOptions = {reply_markup: keyboard};
     bot.sendMessage(fromId, 'Quale ultima notizia vuoi?', sendMessageOptions);
-    logger.info('Sent custom keyboard \/ultima to user: ' + fromId);
+    logger.info('Sent custom keyboard \/ultimissime to user: ' + fromId);
 });
 
 
-bot.onText(/\/ultimanews/, function (msg, match) {
+bot.onText(/\/configurazione/, function (msg, match) {
     var fromId = msg.from.id;
-    var newsText = 'Spiacente, non ci sono news';
+    var attNews = 'attiva_news';
+    var attUfficiale = 'attiva_ufficiale';
+    var attMeteo = 'attiva_meteo';
+    var attSport = 'attiva_sport';
 
-    //cerchiamo nel DB in DB
-    var myCollection = db.collection('LastNews');
-    myCollection.find({newsType: 'news'}, function (err, docs) {
-        if (err || !docs.length) {
-            logger.warn('LastNews - news: not found in LastNews DB');
+    var usersCollection = db.collection('users');
+    usersCollection.find({chatId: fromId}, function (err, users) {
+        if (err || !users.length)
+            logger.warn('User ' + fromId + ' not found in DB');
+        else {
+            var user = users[0];
+            if (user.news && user.news == 'on')
+                attNews = 'dis' + attNews;
+            if (user.ufficiale && user.ufficiale == 'on')
+                attUfficiale = 'dis' + attUfficiale;
+            if (user.meteo && user.meteo == 'on')
+                attMeteo = 'dis' + attMeteo;
+            if (user.sport && user.sport == 'on')
+                attSport = 'dis' + attSport;
         }
-        else
-            newsText = docs[0].newsText;
-        bot.sendMessage(fromId, 'Ecco l\'ultima news: ' + newsText);
-        logger.info('Telegram-onMsg ultimanews from: ' + msg.from.username.toString() + ' testo: ' + newsText);
+        var keyboard = {keyboard: [[attNews, attUfficiale],[attMeteo, attSport],['abbandona']],
+                        resize_keyboard: true,
+                        one_time_keyboard: true, 
+                        selective: true};
+        var sendMessageOptions = {reply_markup: keyboard};
+        bot.sendMessage(fromId, 'Quale informazione vuoi abilitare in automatico?', sendMessageOptions);
+        logger.info('Sent custom keyboard \/configurazione to user: ' + fromId);
     });
+    
 });
 
 
-bot.onText(/\/ultimaufficiale/, function (msg, match) {
-    var fromId = msg.from.id;
-    var newsText = 'Spiacente, non ci sono news dai canali ufficiali';
+bot.onText(/attiva_/, function (msg, match) {
+    if (msg.text.substr(0,3) == 'att') {
+        var fromId = msg.from.id;
+        var toggleType = msg.text.substr(7, msg.text.length-7);
 
-    //cerchiamo nel DB in DB
-    var myCollection = db.collection('LastNews');
-    myCollection.find({newsType: 'official'}, function (err, docs) {
-        if (err || !docs.length) {
-            logger.warn('LastNews - official: not found in LastNews DB');
+        var usersCollection = db.collection('users');
+        usersCollection.find({chatId: fromId}, function (err, users) {
+            if (err || !users.length)
+                logger.warn('User ' + fromId + ' not found in DB');
+            else {
+            usersCollection.update({chatId: fromId}, {$set: {[toggleType]: 'on'}}, {}, function (err, updated) {
+                    if (err) {
+                        logger.error('Error in update toggle ' + toggleType + ' for user: ' + fromId + ' Err: ' + err);
+                    }
+                    else {
+                        logger.info('DB update complete. Update toggle ' + toggleType + ' to on. User: ' + fromId);
+                        bot.sendMessage(fromId, 'OK. Inizierai a ricevere notizie di tipo: ' + toggleType);
+                    }
+                });            
+            }
+        });
+    }    
+});
+
+
+bot.onText(/disattiva_/, function (msg, match) {
+    var fromId = msg.from.id;
+    var toggleType = msg.text.substr(10, msg.text.length-10);
+
+    var usersCollection = db.collection('users');
+    usersCollection.find({chatId: fromId}, function (err, users) {
+        if (err || !users.length)
+            logger.warn('User ' + fromId + ' not found in DB');
+        else {
+           usersCollection.update({chatId: fromId}, {$set: {[toggleType]: 'off'}}, {}, function (err, updated) {
+                if (err) {
+                    logger.error('Error in update toggle ' + toggleType + ' for user: ' + fromId + ' Err: ' + err);
+                }
+                else {
+                    logger.info('DB update complete. Update toggle ' + toggleType + ' to on. User: ' + fromId);
+                    bot.sendMessage(fromId, 'OK. Non riceverei più notizie di tipo: ' + toggleType);
+                }
+            });            
         }
-        else
-            newsText = docs[0].newsText;
-        bot.sendMessage(fromId, 'Ecco l\'ultima news dai canali ufficiali: ' + newsText);
-        logger.info('Telegram-onMsg ultimaufficiale from: ' + msg.from.username.toString() + ' testo: ' + newsText);
     });
+    
 });
 
 
-bot.onText(/\/ultimameteo/, function (msg, match) {
+bot.onText(/\/ultima/, function (msg, match) {
     var fromId = msg.from.id;
-    var newsText = 'Spiacente, non ci sono news dai canali meteo';
+    var newsType = msg.text.substr(7, msg.text.length-7);
+    var newsText = 'Spiacente, non ci sono news di tipo ' + newsType;
 
     //cerchiamo nel DB in DB
     var myCollection = db.collection('LastNews');
-    myCollection.find({newsType: 'weather'}, function (err, docs) {
+    myCollection.find({newsType: newsType}, function (err, docs) {
         if (err || !docs.length) {
-            logger.warn('LastNews - weather: not found in LastNews DB');
+            logger.warn('LastNews - ' + newsType + ': not found in LastNews DB');
         }
         else
             newsText = docs[0].newsText;
-        bot.sendMessage(fromId, 'Ecco l\'ultima news dai canali meteo: ' + newsText);
-        logger.info('Telegram-onMsg ultimameteo from: ' + msg.from.username.toString() + ' testo: ' + newsText);
+        bot.sendMessage(fromId, 'Ecco l\'ultima: ' + newsText+ '\n');
+        logger.info('Telegram-onMsg ultima ' + newsType + ' from: ' + msg.from.username.toString() + ' testo: ' + newsText);
     });
 });
 
@@ -306,19 +340,17 @@ app.post('/sendMessage', function (req, res) {
     });
     
     //Send to all users
-    if( req.body.type == 'official') {
-        var usersCollection = db.collection('users');
-        usersCollection.find(function (err, users) {
-            if (err || !users.length)
-                logger.warn('No users found in DB');
-            else {
-                users.forEach(function(user) {
-                    bot.sendMessage(user.chatId, req.body.text);  
-                    logger.info('Sent to: \'' + user.userName + '\' message of type: \'' + req.body.type + '\' text: ' + req.body.text + '\'');  
-                }, this);
-            }
-        });
-    }
+    var usersCollection = db.collection('users');
+    usersCollection.find({[req.body.type]: 'on'}, function (err, users) {
+        if (err || !users.length)
+            logger.warn('No users found in DB with ' + req.body.type + ' type on');
+        else {
+            users.forEach(function(user) {
+                bot.sendMessage(user.chatId, req.body.text);  
+                logger.info('Sent to: \'' + user.userName + '\' message of type: \'' + req.body.type + '\' text: ' + req.body.text + '\'');  
+            }, this);
+        }
+    });
     
 });
 

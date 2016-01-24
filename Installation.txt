@@ -18,8 +18,15 @@ chisono - Ti dico come ti chiami, rispetto a come hai impostato Telegram
 suggerisco - Puoi scrivere, dopo uno spazio, un suggerimento per me, un messaggio, un consiglio, una fonte di news da seguire
 ultimanews - Testo dell'ultima news che ho selezionato per te
 ultimaufficiale - Testo dell'ultima news dai canali ufficiali della città
-ultimameto - Testo dell'ultima notizia meteo
+ultimameteo - Testo dell'ultima notizia meteo
 ultimissime - Ti permette di selezionare quale news vuoi
+
+
+suggerisco - Dammi un suggerimento, un consiglio, una fonte di news da seguire
+ultimissime - Ti permette di selezionare quale news vuoi
+chisono - Ti dico come ti chiami, rispetto a come hai impostato Telegram
+echo - Scrivi un testo e io te lo riscrivo. Utile vero? :)
+
 
 DESCRIPTION
 /setdescription
