@@ -32,5 +32,5 @@ echo - Scrivi un testo e io te lo riscrivo. Utile vero? :)
 DESCRIPTION
 /setdescription
 Questo bot raccoglie per te informazioni dai canali social di Reggio Emilia e te li fornisce su Telegram.
-Digita /configurazione per decidere su quale tema essere aggiornato in tempo reale con i messaggi che arrivano dalle princiali fonti di informazione della città.
+Digita /settings per decidere su quale tema essere aggiornato in tempo reale con i messaggi che arrivano dalle princiali fonti di informazione della città.
 Digita /ultimissime per accedere alle ultime news su Reggio Emilia.
