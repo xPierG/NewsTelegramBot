@@ -22,7 +22,7 @@ ultimameteo - Testo dell'ultima notizia meteo
 ultimissime - Ti permette di selezionare quale news vuoi
 
 
-configurazione - Decidi gli argomenti sui quali essere aggiornato
+settings - Decidi gli argomenti sui quali essere aggiornato
 ultimissime - Per accedere a ultima news 
 suggerisco - Dammi un suggerimento, un consiglio, una fonte di news da seguire
 chisono - Ti dico come ti chiami, rispetto a come hai impostato Telegram
