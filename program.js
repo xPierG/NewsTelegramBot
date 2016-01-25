@@ -183,7 +183,6 @@ bot.onText(/\/start/, function (msg, match) {
     });
 });
 
-
 bot.onText(/\/ultimissime/, function (msg, match) {
     var fromId = msg.from.id;
     var keyboard = {keyboard: [['\/ultimanews', '\/ultimaufficiale'],['\/ultimameteo', '\/ultimasport'],['abbandona']],
@@ -196,7 +195,7 @@ bot.onText(/\/ultimissime/, function (msg, match) {
 });
 
 
-bot.onText(/\/configurazione/, function (msg, match) {
+bot.onText(/\/settings/, function (msg, match) {
     var fromId = msg.from.id;
     var attNews = 'attiva_news';
     var attUfficiale = 'attiva_ufficiale';
@@ -234,108 +233,50 @@ bot.onText(/attiva_/, function (msg, match) {
     if (msg.text.substr(0,3) == 'att') {
         var fromId = msg.from.id;
         var toggleType = msg.text.substr(7, msg.text.length-7);
+        var sendMessageOptions = {hide_keyboard: true, selective: true};
 
         var usersCollection = db.collection('users');
         usersCollection.find({chatId: fromId}, function (err, users) {
             if (err || !users.length)
                 logger.warn('User ' + fromId + ' not found in DB');
             else {
-            if (toggleType == 'news')
-            usersCollection.update({chatId: fromId}, {$set: {news: 'on'}}, {}, function (err, updated) {
+            var objType = {};
+            objType[toggleType]='on';
+            usersCollection.update({chatId: fromId}, {$set: objType}, {}, function (err, updated) {
                     if (err) {
                         logger.error('Error in update toggle ' + toggleType + ' for user: ' + fromId + ' Err: ' + err);
                     }
                     else {
                         logger.info('DB update complete. Update toggle ' + toggleType + ' to on. User: ' + fromId);
-                        bot.sendMessage(fromId, 'OK. Inizierai a ricevere notizie di tipo: ' + toggleType);
+                        bot.sendMessage(fromId, 'OK. Inizierai a ricevere notizie di tipo: ' + toggleType, sendMessageOptions);
                     }
                 });            
             }
-            if (toggleType == 'sport')
-            usersCollection.update({chatId: fromId}, {$set: {sport: 'on'}}, {}, function (err, updated) {
-                    if (err) {
-                        logger.error('Error in update toggle ' + toggleType + ' for user: ' + fromId + ' Err: ' + err);
-                    }
-                    else {
-                        logger.info('DB update complete. Update toggle ' + toggleType + ' to on. User: ' + fromId);
-                        bot.sendMessage(fromId, 'OK. Inizierai a ricevere notizie di tipo: ' + toggleType);
-                    }
-                });            
-            
-            if (toggleType == 'ufficiale')
-            usersCollection.update({chatId: fromId}, {$set: {ufficiale: 'on'}}, {}, function (err, updated) {
-                    if (err) {
-                        logger.error('Error in update toggle ' + toggleType + ' for user: ' + fromId + ' Err: ' + err);
-                    }
-                    else {
-                        logger.info('DB update complete. Update toggle ' + toggleType + ' to on. User: ' + fromId);
-                        bot.sendMessage(fromId, 'OK. Inizierai a ricevere notizie di tipo: ' + toggleType);
-                    }
-                });            
-            
-            if (toggleType == 'meteo')
-            usersCollection.update({chatId: fromId}, {$set: {meteo: 'on'}}, {}, function (err, updated) {
-                    if (err) {
-                        logger.error('Error in update toggle ' + toggleType + ' for user: ' + fromId + ' Err: ' + err);
-                    }
-                    else {
-                        logger.info('DB update complete. Update toggle ' + toggleType + ' to on. User: ' + fromId);
-                        bot.sendMessage(fromId, 'OK. Inizierai a ricevere notizie di tipo: ' + toggleType);
-                    }
-                });            
-           
         });
-    }    
+    }
 });
 
 
 bot.onText(/disattiva_/, function (msg, match) {
     var fromId = msg.from.id;
     var toggleType = msg.text.substr(10, msg.text.length-10);
+    var sendMessageOptions = {hide_keyboard: true, selective: true};
 
     var usersCollection = db.collection('users');
     usersCollection.find({chatId: fromId}, function (err, users) {
         if (err || !users.length)
             logger.warn('User ' + fromId + ' not found in DB');
         else {
-           if (toggleType == 'news')
-           usersCollection.update({chatId: fromId}, {$set: {news: 'off'}}, {}, function (err, updated) {
+            var objType = {};
+            objType[toggleType]='off';
+
+           usersCollection.update({chatId: fromId}, {$set: objType}, {}, function (err, updated) {
                 if (err) {
                     logger.error('Error in update toggle ' + toggleType + ' for user: ' + fromId + ' Err: ' + err);
                 }
                 else {
                     logger.info('DB update complete. Update toggle ' + toggleType + ' to on. User: ' + fromId);
-                    bot.sendMessage(fromId, 'OK. Non riceverei più notizie di tipo: ' + toggleType);
-                }
-            });            
-           if (toggleType == 'sport')
-           usersCollection.update({chatId: fromId}, {$set: {sport: 'off'}}, {}, function (err, updated) {
-                if (err) {
-                    logger.error('Error in update toggle ' + toggleType + ' for user: ' + fromId + ' Err: ' + err);
-                }
-                else {
-                    logger.info('DB update complete. Update toggle ' + toggleType + ' to on. User: ' + fromId);
-                    bot.sendMessage(fromId, 'OK. Non riceverei più notizie di tipo: ' + toggleType);
-                }
-            });            
-           if (toggleType == 'ufficiale')
-           usersCollection.update({chatId: fromId}, {$set: {ufficiale: 'off'}}, {}, function (err, updated) {
-                if (err) {
-                    logger.error('Error in update toggle ' + toggleType + ' for user: ' + fromId + ' Err: ' + err);
-                }
-                else {
-                    logger.info('DB update complete. Update toggle ' + toggleType + ' to on. User: ' + fromId);
-                    bot.sendMessage(fromId, 'OK. Non riceverei più notizie di tipo: ' + toggleType);
-                }
-            });            
-           if (toggleType == 'meteo')
-           usersCollection.update({chatId: fromId}, {$set: {meteo: 'off'}}, {}, function (err, updated) {
-                if (err) {
-                    logger.error('Error in update toggle ' + toggleType + ' for user: ' + fromId + ' Err: ' + err);
-                }
-                else {
-                    logger.info('DB update complete. Update toggle ' + toggleType + ' to on. User: ' + fromId);
-                    bot.sendMessage(fromId, 'OK. Non riceverei più notizie di tipo: ' + toggleType);
+                    bot.sendMessage(fromId, 'OK. Non riceverei più notizie di tipo: ' + toggleType, sendMessageOptions);
                 }
             });            
         }
@@ -466,3 +407,8 @@ db.on('connect', function () {
 db.on('close', function () {
     logger.info('database closed')
 })
+
+
+
+
+        
