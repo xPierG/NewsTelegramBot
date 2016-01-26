@@ -119,26 +119,33 @@ function SendPingToCreators ()
 bot.onText(/\/echo (.+)/, function (msg, match) {
     var fromId = msg.from.id;
     var resp = match[1];
-    logger.info('Telegram-onText: echo '+ msg.text + ', from: ' + msg.from.username.toString());
+    var username = "non definito";
+    if (msg.from.username) username = msg.from.username.toString();
+
+    logger.info('Telegram-onText: echo '+ msg.text + ', from: ' + username);
     bot.sendMessage(fromId, resp);
 });
 
 bot.onText(/\/chisono/, function (msg, match) {
     var fromId = msg.from.id;
-    var fromUser = msg.from.username.toString();
+    var username = "non definito";
+    if (msg.from.username) username = msg.from.username.toString();    
     var firstName = msg.from.first_name;
     var lastName = msg.from.last_name; 
-    logger.info('Telegram-onText: chisono - (' + fromId + ') ' + fromUser);
-    bot.sendMessage(fromId, 'Sei ' + fromUser + ' (' + firstName + ' ' + lastName + ')');
+    
+    logger.info('Telegram-onText: chisono - (' + fromId + ') ' + username);
+    bot.sendMessage(fromId, 'Sei \'' + username + '\' (' + firstName + ' ' + lastName + ')');
 });
 
 bot.onText(/\/suggerisco (.+)/, function (msg, match) {
     var fromId = msg.from.id;
-    var username = msg.from.username.toString();
+    var username = "non definito";
+    if (msg.from.username) username = msg.from.username.toString();
+    
     var mySuggestion = match[1];
     logger.info('Telegram-onText: suggerisco '+ mySuggestion + ', from: ' + username);
     
-    bot.sendMessage(fromId, 'Grazie per suggerire: "' + mySuggestion + '"');
+    bot.sendMessage(fromId, 'Grazie per aver suggerito: "' + mySuggestion + '"');
     
     //Suggestions will be saved in the DB for future review
     var myCollection = db.collection('suggestions');
@@ -159,9 +166,11 @@ bot.onText(/\/suggerisco (.+)/, function (msg, match) {
 
 bot.onText(/\/start/, function (msg, match) {
     var fromId = msg.from.id;
-    var username = msg.from.username.toString();
-    bot.sendMessage(fromId, 'Benvenuto: ' + msg.from.username.toString());
-    logger.info('Telegram-onMsg start - from: ' + msg.from.username.toString());
+    var username = "";
+    if (msg.from.username) username = msg.from.username.toString();
+    
+    bot.sendMessage(fromId, 'Benvenuto: ' + username);
+    logger.info('Telegram-onMsg start - from: ' + username + ' Id: ' + fromId);
 
     //salvare in DB
     var myCollection = db.collection('users');
@@ -174,7 +183,7 @@ bot.onText(/\/start/, function (msg, match) {
                                 lastName: msg.from.last_name, 
                                 timestamp: new Date().toString()}, function (err, res) {
                 if (err) {
-                    logger.error('Error in insert new user ' + username + ' Err: ' + err);
+                    logger.error('Error in insert new user id ' + fromId + ' Err: ' + err);
                 }
                 else 
                     logger.info('Update complete. Inserted ' + username + ' Id:' + fromId);
@@ -289,6 +298,8 @@ bot.onText(/\/ultima/, function (msg, match) {
     var fromId = msg.from.id;
     var newsType = msg.text.substr(7, msg.text.length-7);
     var newsText = 'Spiacente, non ci sono news di tipo ' + newsType;
+    var username = "non definito";
+    if (msg.from.username) username = msg.from.username.toString();
 
     //cerchiamo nel DB in DB
     var myCollection = db.collection('LastNews');
@@ -299,13 +310,13 @@ bot.onText(/\/ultima/, function (msg, match) {
         else
             newsText = docs[0].newsText;
         bot.sendMessage(fromId, 'Ecco l\'ultima: ' + newsText+ '\n');
-        logger.info('Telegram-onMsg ultima ' + newsType + ' from: ' + msg.from.username.toString() + ' testo: ' + newsText);
+        logger.info('Telegram-onMsg ultima ' + newsType + ' from: ' + username + ' testo: ' + newsText);
     });
 });
 
 // Any kind of message
 bot.on('message', function (msg) {
-    logger.info('Telegram-onMsg generic: '+ msg.text + ', from: ' + msg.from.username.toString());
+    logger.info('Telegram-onMsg generic: '+ msg.text + ', from: ' + msg.from.id);
 });
 
 //
